@@ -1,9 +1,10 @@
 import { StyleSheet, View, Text } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useEffect, useState } from "react";
-import Overlay from "./Overlay";
-import Button from "../Button";
+import Overlay from "./components/Overlay";
 import { fonts } from "../../theme/fonts";
+import LinkButton from "./components/LinkButton";
+import Modal from "./components/Modal";
 
 type BarCodeScannerResult = {
   data: string;
@@ -14,6 +15,7 @@ const QRCamera = () => {
   const [hasPermission, setHasPermission] = useState(false);
   const [scanned, setScanned] = useState(false);
   const [data, setData] = useState<string>();
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const getPermissions = async () => {
@@ -27,6 +29,7 @@ const QRCamera = () => {
   const handleBarCodeScanned = ({ type, data }: BarCodeScannerResult) => {
     setScanned(true);
     setData(data);
+    setModalVisible(true);
 
     console.log(
       `🤖 DEBUG: Scanned code with type '${type}' and data '${data}'`
@@ -57,17 +60,21 @@ const QRCamera = () => {
 
   return (
     <View style={styles.container}>
+      <Modal
+        isVisible={isModalVisible}
+        onClose={() => {
+          setScanned(false), setData(undefined), setModalVisible(false);
+        }}
+        data={data}
+      />
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
       >
-        <Overlay data={data} />
+        <Overlay>
+          <Text style={styles.ctaText}>🔍 Scan a QR 🔎</Text>
+        </Overlay>
       </BarCodeScanner>
-      {scanned && (
-        <View style={styles.resetButtonContainer}>
-          <Button label="Scan another code" onPress={handleReset} />
-        </View>
-      )}
     </View>
   );
 };
@@ -78,14 +85,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  resetButtonContainer: {
-    position: "absolute",
-    bottom: 64,
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   noPermissionContainer: {
     flex: 1,
     alignItems: "center",
@@ -94,5 +93,14 @@ const styles = StyleSheet.create({
   noPermissionText: {
     color: "white",
     fontFamily: fonts.bold,
+  },
+  ctaText: {
+    color: "rgba(6,18,58,1)",
+    textAlign: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    fontFamily: fonts.bold,
+    backgroundColor: "white",
+    width: "101%",
   },
 });

@@ -27,12 +27,7 @@ const App = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        style="light"
-        animated
-        // translucent
-        backgroundColor="rgba(0,0,0,0)"
-      />
+      <StatusBar style="light" animated backgroundColor="rgba(0,0,0,0)" />
       <QRCamera />
     </View>
   );

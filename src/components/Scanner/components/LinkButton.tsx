@@ -1,5 +1,5 @@
 import { Linking, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { fonts } from "../../theme/fonts";
+import { fonts } from "../../../theme/fonts";
 
 type Props = {
   url: string;
