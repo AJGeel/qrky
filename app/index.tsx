@@ -30,7 +30,7 @@ const App = () => {
       <StatusBar
         style="light"
         animated
-        translucent
+        // translucent
         backgroundColor="rgba(0,0,0,0)"
       />
       <QRCamera />

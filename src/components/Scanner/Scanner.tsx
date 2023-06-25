@@ -1,80 +1,98 @@
-import { Camera, CameraType } from "expo-camera";
 import { StyleSheet, View, Text } from "react-native";
-import { fonts } from "../../theme/fonts";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useEffect, useState } from "react";
+import Overlay from "./Overlay";
+import Button from "../Button";
+import { fonts } from "../../theme/fonts";
+
+type BarCodeScannerResult = {
+  data: string;
+  type: string;
+};
 
 const QRCamera = () => {
   const [hasPermission, setHasPermission] = useState(false);
+  const [scanned, setScanned] = useState(false);
+  const [data, setData] = useState<string>();
 
   useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
+    const getPermissions = async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === "granted");
-    })();
+    };
+
+    getPermissions();
   }, []);
 
-  if (!hasPermission) {
-    return <Text>No access to camera</Text>;
+  const handleBarCodeScanned = ({ type, data }: BarCodeScannerResult) => {
+    setScanned(true);
+    setData(data);
+
+    console.log(
+      `🤖 DEBUG: Scanned code with type '${type}' and data '${data}'`
+    );
+  };
+
+  const handleReset = () => {
+    setScanned(false), setData(undefined);
+  };
+
+  if (hasPermission === null) {
+    return (
+      <View style={styles.noPermissionContainer}>
+        <Text style={styles.noPermissionText}>
+          Requesting camera permission...
+        </Text>
+      </View>
+    );
+  }
+
+  if (hasPermission === false) {
+    return (
+      <View style={styles.noPermissionContainer}>
+        <Text style={styles.noPermissionText}>No camera permission...</Text>
+      </View>
+    );
   }
 
   return (
-    <Camera
-      style={styles.camera}
-      type={CameraType.back}
-      barCodeScannerSettings={{
-        barCodeTypes: [BarCodeScanner.Constants.BarCodeType.QR],
-      }}
-      ratio="16:9"
-    >
-      <View style={styles.cameraOverlay}>
-        <View style={styles.cameraMaskBg}></View>
-        <View style={styles.cameraMaskRow}>
-          <View style={styles.cameraMaskBg} />
-          <View style={styles.mask}>
-            <Text style={styles.text}>Scan a QR</Text>
-          </View>
-          <View style={styles.cameraMaskBg} />
+    <View style={styles.container}>
+      <BarCodeScanner
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        style={StyleSheet.absoluteFillObject}
+      >
+        <Overlay data={data} />
+      </BarCodeScanner>
+      {scanned && (
+        <View style={styles.resetButtonContainer}>
+          <Button label="Scan another code" onPress={handleReset} />
         </View>
-        <View style={styles.cameraMaskBg} />
-      </View>
-    </Camera>
+      )}
+    </View>
   );
 };
 
 export default QRCamera;
 
 const styles = StyleSheet.create({
-  camera: {
+  container: {
     flex: 1,
   },
-  cameraOverlay: {
-    flex: 1,
-  },
-  cameraMaskRow: {
-    flexDirection: "row",
-  },
-  cameraMaskBg: {
-    backgroundColor: "rgba(6,18,58,.5)",
-    flex: 1,
-  },
-  mask: {
-    width: 300,
-    height: 300,
-    borderWidth: 4,
-    borderRadius: 4,
-    borderColor: "white",
-    alignItems: "center",
-    justifyContent: "flex-end",
-  },
-  text: {
-    color: "rgba(6,18,58,1)",
-    textAlign: "center",
-    paddingVertical: 8,
-    fontFamily: fonts.bold,
-    backgroundColor: "white",
+  resetButtonContainer: {
+    position: "absolute",
+    bottom: 64,
     width: "100%",
-    borderWidth: 1,
-    borderColor: "white",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noPermissionContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  noPermissionText: {
+    color: "white",
+    fontFamily: fonts.bold,
   },
 });
