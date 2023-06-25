@@ -12,15 +12,25 @@
       "backgroundColor": "#000000"
     },
     "scheme": "myapp",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow QRKY to access your camera.",
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA"
+      ],
+      "package": "com.ajgeel.qrky"
     },
     "plugins": [
       [
@@ -29,6 +39,11 @@
           "cameraPermission": "Allow QRKY to access your camera."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "901cc36d-697e-447e-ac1d-2389470becc4"
+      }
+    }
   }
 }
