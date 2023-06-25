@@ -3,7 +3,6 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import { useEffect, useState } from "react";
 import Overlay from "./components/Overlay";
 import { fonts } from "../../theme/fonts";
-import LinkButton from "./components/LinkButton";
 import Modal from "./components/Modal";
 
 type BarCodeScannerResult = {
@@ -34,10 +33,6 @@ const QRCamera = () => {
     console.log(
       `🤖 DEBUG: Scanned code with type '${type}' and data '${data}'`
     );
-  };
-
-  const handleReset = () => {
-    setScanned(false), setData(undefined);
   };
 
   if (hasPermission === null) {
@@ -72,7 +67,7 @@ const QRCamera = () => {
         style={StyleSheet.absoluteFillObject}
       >
         <Overlay>
-          <Text style={styles.ctaText}>🔍 Scan a QR 🔎</Text>
+          <Text style={styles.ctaText}>🔍 Scan a QR / Barcode 🔎</Text>
         </Overlay>
       </BarCodeScanner>
     </View>

@@ -8,6 +8,8 @@ import {
 import Button from "../../Button";
 import { loadInBrowser } from "../../../utils/loadInBrowser";
 import { fonts } from "../../../theme/fonts";
+import * as Clipboard from "expo-clipboard";
+import { useEffect, useState } from "react";
 
 type Props = {
   isVisible: boolean;
@@ -15,9 +17,24 @@ type Props = {
   data?: string;
 };
 
+// Modal ideas:
+// Detect types of {data}.
+// {https://}***? => URL, copy or open it with RN/Linking
+// {20086237}?    => EAN, copy or retrieve more information
+
 const Modal = ({ isVisible, onClose, data }: Props) => {
-  const onCopy = () => {
-    console.log("todo");
+  const [hasCopied, setHasCopied] = useState(false);
+
+  const onCopy = async () => {
+    if (!data) {
+      return;
+    }
+
+    const result = await Clipboard.setStringAsync(data);
+
+    if (result) {
+      setHasCopied(true);
+    }
   };
 
   const onOpen = () => {
@@ -27,6 +44,12 @@ const Modal = ({ isVisible, onClose, data }: Props) => {
 
     loadInBrowser(data);
   };
+
+  useEffect(() => {
+    if (!isVisible) {
+      setHasCopied(false);
+    }
+  }, [isVisible]);
 
   return (
     <RNModal
@@ -40,7 +63,7 @@ const Modal = ({ isVisible, onClose, data }: Props) => {
         <Text style={styles.header}>You scanned: 👀</Text>
         <Text style={styles.label}>{data}</Text>
         <Button
-          label="Copy URL"
+          label={hasCopied ? "URL copied to clipboard ✅" : "Copy URL"}
           onPress={onCopy}
           containerStyle={styles.buttonStyle}
         />
