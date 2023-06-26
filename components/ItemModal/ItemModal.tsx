@@ -1,13 +1,7 @@
-import {
-  StyleSheet,
-  View,
-  Text,
-  Modal as RNModal,
-  TouchableOpacity,
-} from "react-native";
-import Button from "../../Button";
-import { loadInBrowser } from "../../../utils/loadInBrowser";
-import { fonts } from "../../../theme/fonts";
+import { StyleSheet, View, Text, Modal, TouchableOpacity } from "react-native";
+import Button from "../Button";
+import { loadInBrowser } from "../../utils/loadInBrowser";
+import { fonts } from "../../theme/fonts";
 import * as Clipboard from "expo-clipboard";
 import { useEffect, useState } from "react";
 
@@ -22,7 +16,7 @@ type Props = {
 // {https://}***? => URL, copy or open it with RN/Linking
 // {20086237}?    => EAN, copy or retrieve more information
 
-const Modal = ({ isVisible, onClose, data }: Props) => {
+const ItemModal = ({ isVisible, onClose, data }: Props) => {
   const [hasCopied, setHasCopied] = useState(false);
 
   const onCopy = async () => {
@@ -52,13 +46,17 @@ const Modal = ({ isVisible, onClose, data }: Props) => {
   }, [isVisible]);
 
   return (
-    <RNModal
+    <Modal
       animationType="fade"
       transparent
       visible={isVisible}
       onRequestClose={onClose}
     >
-      <TouchableOpacity onPress={onClose} style={styles.backdrop} />
+      <TouchableOpacity
+        onPress={onClose}
+        style={styles.backdrop}
+        activeOpacity={1}
+      />
       <View style={styles.container}>
         <Text style={styles.header}>You scanned: 👀</Text>
         <Text style={styles.label}>{data}</Text>
@@ -73,11 +71,11 @@ const Modal = ({ isVisible, onClose, data }: Props) => {
           containerStyle={styles.buttonStyle}
         />
       </View>
-    </RNModal>
+    </Modal>
   );
 };
 
-export default Modal;
+export default ItemModal;
 
 const styles = StyleSheet.create({
   backdrop: {

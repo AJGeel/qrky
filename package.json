@@ -1,7 +1,7 @@
 {
   "name": "qrky",
   "version": "1.0.0",
-  "main": "src/main.ts",
+  "main": "main.ts",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -10,6 +10,8 @@
     "build:android:local": "eas build -p android --profile preview --local"
   },
   "dependencies": {
+    "@expo/vector-icons": "^13.0.0",
+    "@react-native-async-storage/async-storage": "^1.18.2",
     "expo": "~48.0.18",
     "expo-barcode-scanner": "^12.3.2",
     "expo-camera": "^13.2.1",

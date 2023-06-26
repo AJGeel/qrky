@@ -7,7 +7,7 @@ type Props = {
 const { width } = Dimensions.get("window");
 const PADDING = 32;
 
-const Overlay = ({ children }: Props) => (
+const ScannerOverlay = ({ children }: Props) => (
   <View style={styles.cameraOverlay}>
     <View style={styles.cameraMaskBg}></View>
     <View style={styles.cameraMaskRow}>
@@ -19,7 +19,7 @@ const Overlay = ({ children }: Props) => (
   </View>
 );
 
-export default Overlay;
+export default ScannerOverlay;
 
 const styles = StyleSheet.create({
   cameraOverlay: {
