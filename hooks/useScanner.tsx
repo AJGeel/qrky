@@ -1,53 +1,56 @@
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { BarCodeScanner, PermissionStatus } from "expo-barcode-scanner";
 import { useEffect, useState } from "react";
+import { addToHistory } from "../services/history/addToHistory";
 
-type BarCodeScannerResult = {
+type CodeScannerResult = {
   data: string;
   type: string;
 };
 
 export const useScanner = () => {
   const [hasPermission, setHasPermission] = useState(false);
-  const [scanned, setScanned] = useState(false);
+  const [isScanned, setIsScanned] = useState(false);
   const [scannedData, setScannedData] = useState<string>();
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const handleCodeScanned = async ({ type, data }: CodeScannerResult) => {
+    setIsScanned(true);
+    setScannedData(data);
+    setIsModalVisible(true);
+
+    await addToHistory({ data, type, scannedAt: new Date() });
+  };
+
+  const onCloseModal = () => {
+    setIsScanned(false);
+    setScannedData(undefined);
+    setIsModalVisible(false);
+  };
 
   useEffect(() => {
+    if (hasPermission) {
+      return;
+    }
+
     const getPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
 
-      setHasPermission(status === "granted");
+      setHasPermission(status === PermissionStatus.GRANTED);
     };
 
     getPermissions();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }: BarCodeScannerResult) => {
-    setScanned(true);
-    setScannedData(data);
-    setModalVisible(true);
-
-    console.log(
-      `🤖 DEBUG: Scanned code with type '${type}' and data '${data}'`
-    );
-  };
-
-  const handleReset = () => {
-    setScanned(false);
-    setScannedData(undefined);
-    setModalVisible(false);
-  };
-
   return {
     hasPermission,
     setHasPermission,
-    scanned,
-    setScanned,
+    isScanned,
+    setIsScanned,
     scannedData,
     setScannedData,
     isModalVisible,
-    setModalVisible,
-    handleBarCodeScanned,
-    handleReset,
+    setIsModalVisible,
+    handleCodeScanned,
+    onCloseModal,
   };
 };

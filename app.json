@@ -12,7 +12,9 @@
       "backgroundColor": "#000000"
     },
     "scheme": "myapp",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -25,7 +27,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["android.permission.CAMERA"],
+      "permissions": [
+        "android.permission.CAMERA"
+      ],
       "package": "com.ajgeel.qrky"
     },
     "plugins": [
@@ -34,7 +38,8 @@
         {
           "cameraPermission": "Allow QRKY to access your camera."
         }
-      ]
+      ],
+      "expo-router"
     ],
     "extra": {
       "eas": {

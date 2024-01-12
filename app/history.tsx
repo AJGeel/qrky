@@ -1,50 +1,64 @@
+import HistoryItem from "../components/HistoryItem/HistoryItem";
+import { colors } from "../theme/colors";
 import { fonts } from "../theme/fonts";
 import { View, StyleSheet, Text, FlatList } from "react-native";
-
-const MOCK_DATA = [
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-    title: "First Item",
-    date: new Date(),
-  },
-  {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-    title: "Second Item",
-    date: new Date(),
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    title: "Third Item",
-    date: new Date(),
-  },
-];
-
-type ItemProps = { title: string; date: Date };
-
-const Item = ({ title, date }: ItemProps) => (
-  <View style={styles.item}>
-    <Text style={styles.text}>{title}</Text>
-    <Text style={styles.text}>{date.toString()}</Text>
-  </View>
-);
+import LoadingScreen from "../components/LoadingScreen/LoadingScreen";
+import { useScanHistory } from "../hooks/useScanHistory";
+import ClearHistory from "../components/HistoryItem/ClearHistory";
+import { useScanner } from "../hooks/useScanner";
+import ItemModal from "../components/ItemModal";
 
 const History = () => {
+  const {
+    scannedData,
+    setScannedData,
+    isModalVisible,
+    setIsModalVisible,
+    onCloseModal,
+  } = useScanner();
+  const { historyItems, isLoading } = useScanHistory();
+
+  if (historyItems.length === 0 && isLoading) {
+    return <LoadingScreen />;
+  }
+
+  const sortedItems = historyItems.sort(
+    (a, b) => new Date(b.scannedAt).getTime() - new Date(a.scannedAt).getTime()
+  );
+
   return (
     <View style={styles.container}>
-      {MOCK_DATA.length > 0 ? (
-        <>
-          <Text style={styles.header}>Scanned Items</Text>
-          <FlatList
-            data={MOCK_DATA}
-            renderItem={({ item }) => (
-              <Item title={item.title} date={item.date} />
-            )}
-            keyExtractor={(item) => item.id}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-          />
-        </>
+      <Text style={styles.header}>Scanned Items</Text>
+      <ItemModal
+        isVisible={isModalVisible}
+        onClose={onCloseModal}
+        data={scannedData}
+      />
+      {historyItems.length > 0 ? (
+        <FlatList
+          data={sortedItems}
+          renderItem={({ item }) => (
+            <HistoryItem
+              data={item.data}
+              scannedAt={item.scannedAt}
+              onPressBody={() => {
+                setScannedData(item.data);
+                setIsModalVisible(true);
+              }}
+            />
+          )}
+          keyExtractor={(item) => item.data}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          ListFooterComponent={() => <ClearHistory />}
+          refreshing={false}
+          onRefresh={() => {
+            console.log("Todo: implement refreshing.");
+          }}
+        />
       ) : (
-        <></>
+        <Text style={styles.emptyState}>
+          You don't have any scanned items yet. Get out there and scan some QRs!
+        </Text>
       )}
     </View>
   );
@@ -53,27 +67,30 @@ const History = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "rgba(6,18,58,1)",
-    padding: 24,
+    backgroundColor: colors.blue.s900,
     paddingTop: 52,
   },
-  item: {
-    paddingVertical: 12,
-  },
-  text: {
-    color: "white",
-    fontFamily: fonts.regular,
-    fontSize: 16,
-  },
   separator: {
-    backgroundColor: "rgba(255,255,255,.4)",
+    backgroundColor: colors.white,
+    opacity: 0.4,
     height: 1,
+    marginHorizontal: 24,
   },
   header: {
-    color: "white",
+    color: colors.white,
     fontFamily: fonts.bold,
     fontSize: 20,
-    marginBottom: 12,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+  },
+  emptyState: {
+    color: colors.white,
+    fontFamily: fonts.regular,
+    fontSize: 16,
+    lineHeight: 16 * 1.6,
+    padding: 24,
+    paddingTop: 12,
+    opacity: 0.6,
   },
 });
 

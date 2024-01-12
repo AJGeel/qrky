@@ -5,15 +5,16 @@ import ScannerOverlay from "../components/ScannerOverlay";
 import ItemModal from "../components/ItemModal";
 import { useScanner } from "../hooks/useScanner";
 import { useIsFocused } from "@react-navigation/native";
+import { colors } from "../theme/colors";
 
 const Index = () => {
   const {
     hasPermission,
-    scanned,
+    isScanned,
     scannedData,
     isModalVisible,
-    handleBarCodeScanned,
-    handleReset,
+    handleCodeScanned,
+    onCloseModal,
   } = useScanner();
   const isFocused = useIsFocused();
 
@@ -30,12 +31,12 @@ const Index = () => {
       <View style={styles.container}>
         <ItemModal
           isVisible={isModalVisible}
-          onClose={handleReset}
+          onClose={onCloseModal}
           data={scannedData}
         />
         {isFocused && (
           <BarCodeScanner
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            onBarCodeScanned={isScanned ? undefined : handleCodeScanned}
             style={StyleSheet.absoluteFillObject}
           >
             <ScannerOverlay>
@@ -51,7 +52,7 @@ const Index = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "rgba(6,18,58,1)",
+    backgroundColor: colors.blue.s900,
   },
   noPermissionContainer: {
     flex: 1,
@@ -59,16 +60,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   noPermissionText: {
-    color: "white",
+    color: colors.white,
     fontFamily: fonts.bold,
   },
   ctaText: {
-    color: "rgba(6,18,58,1)",
+    color: colors.blue.s900,
     textAlign: "center",
     paddingVertical: 8,
     paddingHorizontal: 4,
     fontFamily: fonts.bold,
-    backgroundColor: "white",
+    backgroundColor: colors.white,
     width: "101%",
   },
 });

@@ -58,7 +58,7 @@ const ItemModal = ({ isVisible, onClose, data }: Props) => {
         activeOpacity={1}
       />
       <View style={styles.container}>
-        <Text style={styles.header}>You scanned: 👀</Text>
+        <Text style={styles.header}>Scanned code:</Text>
         <Text style={styles.label}>{data}</Text>
         <Button
           label={hasCopied ? "URL copied to clipboard ✅" : "Copy URL"}
