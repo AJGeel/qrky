@@ -2,12 +2,18 @@ import { useEffect, useState } from "react";
 import { storageKeys } from "../services/storage/storageKeys";
 import { getStorageData } from "../services/storage/getStorageData";
 import { ScanHistoryItem } from "../services/history/types";
+import { useIsFocused } from "@react-navigation/native";
 
 export const useScanHistory = () => {
   const [historyItems, setHistoryItems] = useState<ScanHistoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
+    if (!isFocused) {
+      return;
+    }
+
     const fetchData = async () => {
       setIsLoading(true);
 
@@ -31,7 +37,7 @@ export const useScanHistory = () => {
     };
 
     fetchData();
-  }, []);
+  }, [isFocused]);
 
   return {
     historyItems,

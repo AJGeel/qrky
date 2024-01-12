@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Pressable } from "react-native";
+import { Alert, View, StyleSheet, Text, Pressable } from "react-native";
 import { colors } from "../../theme/colors";
 import { fonts } from "../../theme/fonts";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -16,7 +16,25 @@ const HistoryItem = ({ data, scannedAt }: ScanHistoryItem) => (
       </Text>
     </Pressable>
     <Pressable
-      onPress={() => alert("Are you sure you want to remove this?")}
+      onPress={() => {
+        Alert.alert(
+          "Heads up",
+          "Do you want to delete this?",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Phew. That was a close call."),
+              style: "cancel",
+            },
+            {
+              text: "Delete it!",
+              onPress: () => console.log("Todo: delete."),
+              style: "destructive",
+            },
+          ],
+          { cancelable: true }
+        );
+      }}
       style={({ pressed }) => [
         styles.deleteButton,
         pressed && styles.deleteButtonPressed,

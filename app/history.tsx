@@ -9,7 +9,7 @@ import ClearHistory from "../components/HistoryItem/ClearHistory";
 const History = () => {
   const { historyItems, isLoading } = useScanHistory();
 
-  if (isLoading) {
+  if (historyItems.length === 0 && isLoading) {
     return <LoadingScreen />;
   }
 
@@ -33,6 +33,10 @@ const History = () => {
           keyExtractor={(item) => item.data}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           ListFooterComponent={() => <ClearHistory />}
+          refreshing={false}
+          onRefresh={() => {
+            console.log("Todo: implement refreshing.");
+          }}
         />
       ) : (
         <Text style={styles.emptyState}>
