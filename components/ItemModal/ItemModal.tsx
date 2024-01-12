@@ -4,6 +4,7 @@ import { loadInBrowser } from "../../utils/loadInBrowser";
 import { fonts } from "../../theme/fonts";
 import * as Clipboard from "expo-clipboard";
 import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {
   isVisible: boolean;
@@ -39,6 +40,11 @@ const ItemModal = ({ isVisible, onClose, data }: Props) => {
     loadInBrowser(data);
   };
 
+  const onDebug = async () => {
+    await AsyncStorage.clear();
+    alert("Async storage has been cleared.");
+  };
+
   useEffect(() => {
     if (!isVisible) {
       setHasCopied(false);
@@ -68,6 +74,11 @@ const ItemModal = ({ isVisible, onClose, data }: Props) => {
         <Button
           label="Open URL"
           onPress={onOpen}
+          containerStyle={styles.buttonStyle}
+        />
+        <Button
+          label="DEBUG: Reset storage"
+          onPress={onDebug}
           containerStyle={styles.buttonStyle}
         />
       </View>
