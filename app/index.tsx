@@ -14,7 +14,7 @@ const Index = () => {
     scannedData,
     isModalVisible,
     handleCodeScanned,
-    handleReset,
+    onCloseModal,
   } = useScanner();
   const isFocused = useIsFocused();
 
@@ -31,7 +31,7 @@ const Index = () => {
       <View style={styles.container}>
         <ItemModal
           isVisible={isModalVisible}
-          onClose={handleReset}
+          onClose={onCloseModal}
           data={scannedData}
         />
         {isFocused && (

@@ -5,8 +5,17 @@ import { View, StyleSheet, Text, FlatList } from "react-native";
 import LoadingScreen from "../components/LoadingScreen/LoadingScreen";
 import { useScanHistory } from "../hooks/useScanHistory";
 import ClearHistory from "../components/HistoryItem/ClearHistory";
+import { useScanner } from "../hooks/useScanner";
+import ItemModal from "../components/ItemModal";
 
 const History = () => {
+  const {
+    scannedData,
+    setScannedData,
+    isModalVisible,
+    setIsModalVisible,
+    onCloseModal,
+  } = useScanner();
   const { historyItems, isLoading } = useScanHistory();
 
   if (historyItems.length === 0 && isLoading) {
@@ -20,14 +29,22 @@ const History = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Scanned Items</Text>
+      <ItemModal
+        isVisible={isModalVisible}
+        onClose={onCloseModal}
+        data={scannedData}
+      />
       {historyItems.length > 0 ? (
         <FlatList
           data={sortedItems}
           renderItem={({ item }) => (
             <HistoryItem
               data={item.data}
-              type={item.type}
               scannedAt={item.scannedAt}
+              onPressBody={() => {
+                setScannedData(item.data);
+                setIsModalVisible(true);
+              }}
             />
           )}
           keyExtractor={(item) => item.data}

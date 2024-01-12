@@ -11,20 +11,20 @@ export const useScanner = () => {
   const [hasPermission, setHasPermission] = useState(false);
   const [isScanned, setIsScanned] = useState(false);
   const [scannedData, setScannedData] = useState<string>();
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleCodeScanned = async ({ type, data }: CodeScannerResult) => {
     setIsScanned(true);
     setScannedData(data);
-    setModalVisible(true);
+    setIsModalVisible(true);
 
     await addToHistory({ data, type, scannedAt: new Date() });
   };
 
-  const handleReset = () => {
+  const onCloseModal = () => {
     setIsScanned(false);
     setScannedData(undefined);
-    setModalVisible(false);
+    setIsModalVisible(false);
   };
 
   useEffect(() => {
@@ -49,8 +49,8 @@ export const useScanner = () => {
     scannedData,
     setScannedData,
     isModalVisible,
-    setModalVisible,
+    setIsModalVisible,
     handleCodeScanned,
-    handleReset,
+    onCloseModal,
   };
 };
