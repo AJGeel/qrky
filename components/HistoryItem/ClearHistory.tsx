@@ -1,26 +1,49 @@
-import { View, StyleSheet, Text, Pressable } from "react-native";
+import { View, StyleSheet, Text, Pressable, Alert } from "react-native";
 import { fonts } from "../../theme/fonts";
 import { colors } from "../../theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 
-const ClearHistory = () => (
-  <View style={styles.container}>
-    <Pressable
-      style={({ pressed }) => [
-        styles.buttonContainer,
-        pressed && styles.buttonContainerPressed,
-      ]}
-    >
-      <Text style={styles.buttonText}>Clear scan history</Text>
-      <Ionicons
-        name="trash"
-        size={16}
-        color={colors.white}
-        style={styles.icon}
-      />
-    </Pressable>
-  </View>
-);
+const ClearHistory = () => {
+  const onPressDelete = () => {
+    Alert.alert(
+      "Heads up",
+      "You are about to delete your scan history. This cannot be undone. Are you sure?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Phew. That was a close call."),
+          style: "cancel",
+        },
+        {
+          text: "Delete it!",
+          onPress: () => console.log("Todo: delete."),
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <Pressable
+        style={({ pressed }) => [
+          styles.buttonContainer,
+          pressed && styles.buttonContainerPressed,
+        ]}
+        onPress={onPressDelete}
+      >
+        <Text style={styles.buttonText}>Clear scan history</Text>
+        <Ionicons
+          name="trash"
+          size={16}
+          color={colors.white}
+          style={styles.icon}
+        />
+      </Pressable>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

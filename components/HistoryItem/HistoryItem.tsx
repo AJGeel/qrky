@@ -3,14 +3,17 @@ import { colors } from "../../theme/colors";
 import { fonts } from "../../theme/fonts";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ScanHistoryItem } from "../../services/history/types";
+import { formatDistanceToNow } from "date-fns";
 
-const HistoryItem = ({ data, type, scannedAt }: ScanHistoryItem) => (
+const HistoryItem = ({ data, scannedAt }: ScanHistoryItem) => (
   <View style={styles.container}>
     <Pressable style={styles.mainItem} onPress={() => alert(data)}>
       <Text numberOfLines={1} style={styles.nameText}>
         {data}
       </Text>
-      <Text style={styles.dateText}>{scannedAt.toString()}</Text>
+      <Text style={styles.dateText}>
+        {formatDistanceToNow(scannedAt, { addSuffix: true })}
+      </Text>
     </Pressable>
     <Pressable
       onPress={() => alert("Are you sure you want to remove this?")}
@@ -27,14 +30,14 @@ const HistoryItem = ({ data, type, scannedAt }: ScanHistoryItem) => (
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 12,
+    paddingVertical: 16,
     paddingHorizontal: 24,
     flexDirection: "row",
     gap: 12,
   },
   mainItem: {
     flexGrow: 1,
-    width: "70%",
+    width: "70%" /* Janky RN flexGrow causes truncated text to overflow 🫨 */,
   },
   nameText: {
     color: colors.white,

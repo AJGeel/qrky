@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { ScanHistoryItem } from "../app/history";
 import { storageKeys } from "../services/storage/storageKeys";
 import { getStorageData } from "../services/storage/getStorageData";
+import { ScanHistoryItem } from "../services/history/types";
 
 export const useScanHistory = () => {
   const [historyItems, setHistoryItems] = useState<ScanHistoryItem[]>([]);

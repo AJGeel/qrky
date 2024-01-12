@@ -14,7 +14,7 @@ const History = () => {
   }
 
   const sortedItems = historyItems.sort(
-    (a, b) => Number(a.date) - Number(b.date)
+    (a, b) => new Date(b.scannedAt).getTime() - new Date(a.scannedAt).getTime()
   );
 
   return (
