@@ -3,6 +3,8 @@ import { useFonts } from "expo-font";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { StatusBar } from "expo-status-bar";
 
+SplashScreen.preventAutoHideAsync();
+
 const Layout = () => {
   const [fontsLoaded] = useFonts({
     "DMSans-Regular": require("../assets/fonts/DMSans/DMSans-Regular.otf"),
@@ -11,12 +13,11 @@ const Layout = () => {
   });
 
   if (!fontsLoaded) {
-    return <SplashScreen />;
+    return null;
   }
 
   return (
     <>
-      {!fontsLoaded && <SplashScreen />}
       <StatusBar style="light" animated backgroundColor="rgba(0,0,0,0)" />
       <Tabs
         screenOptions={{
