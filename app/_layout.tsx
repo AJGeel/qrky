@@ -1,7 +1,8 @@
-import { Tabs, SplashScreen } from "expo-router";
+import { Tabs } from "expo-router";
 import { useFonts } from "expo-font";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { StatusBar } from "expo-status-bar";
+import colors from "@/theme/colors";
 
 const Layout = () => {
   const [fontsLoaded] = useFonts({
@@ -11,21 +12,20 @@ const Layout = () => {
   });
 
   if (!fontsLoaded) {
-    return <SplashScreen />;
+    return;
   }
 
   return (
     <>
-      {!fontsLoaded && <SplashScreen />}
-      <StatusBar style="light" animated backgroundColor="rgba(0,0,0,0)" />
+      <StatusBar style="light" animated backgroundColor={colors.transparent} />
       <Tabs
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,
           tabBarStyle: {
-            backgroundColor: "rgba(6,18,58,1)",
+            backgroundColor: colors.navy["1.0"],
             borderTopWidth: 1,
-            borderTopColor: "rgba(255,255,255,.2)",
+            borderTopColor: colors.white["0.2"],
           },
         }}
       >
@@ -36,7 +36,7 @@ const Layout = () => {
               <Ionicons
                 name="qr-code"
                 size={24}
-                color={focused ? "rgba(255,255,255,1)" : "rgba(255,255,255,.4)"}
+                color={focused ? colors.white["1.0"] : colors.white["0.4"]}
               />
             ),
           }}
@@ -48,7 +48,7 @@ const Layout = () => {
               <Ionicons
                 name="albums"
                 size={24}
-                color={focused ? "rgba(255,255,255,1)" : "rgba(255,255,255,.4)"}
+                color={focused ? colors.white["1.0"] : colors.white["0.4"]}
               />
             ),
           }}

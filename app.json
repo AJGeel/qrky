@@ -2,44 +2,36 @@
   "expo": {
     "name": "qrky",
     "slug": "qrky",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#000000"
+      "backgroundColor": "#06123a"
     },
-    "scheme": "myapp",
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true,
-      "infoPlist": {
-        "NSCameraUsageDescription": "Allow QRKY to access your camera.",
-        "NSMicrophoneUsageDescription": "Allow QRKY to access your microphone"
-      }
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "permissions": ["android.permission.CAMERA"],
-      "package": "com.ajgeel.qrky"
+        "backgroundColor": "#06123a"
+      }
     },
+    "scheme": "qrky",
     "plugins": [
+      "expo-router",
       [
-        "expo-barcode-scanner",
+        "expo-camera",
         {
-          "cameraPermission": "Allow QRKY to access your camera."
+          "cameraPermission": "Allow QRKY to access your camera",
+          "microphonePermission": "Allow QRKY to access your microphone",
+          "recordAudioAndroid": true
         }
       ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "901cc36d-697e-447e-ac1d-2389470becc4"
-      }
-    }
+    ]
   }
 }

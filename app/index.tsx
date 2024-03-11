@@ -1,76 +1,78 @@
-import { StyleSheet, View, Text } from "react-native";
-import { BarCodeScanner } from "expo-barcode-scanner";
-import { fonts } from "../theme/fonts";
-import ScannerOverlay from "../components/ScannerOverlay";
-import ItemModal from "../components/ItemModal";
-import { useScanner } from "../hooks/useScanner";
-import { useIsFocused } from "@react-navigation/native";
+import {
+  BarcodeScanningResult,
+  CameraView,
+  useCameraPermissions,
+} from "expo-camera/next";
+import Screen from "@/components/Screen";
+import { useState } from "react";
+import {
+  Button,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { debug } from "@/utils/debug";
+import { useBarcodeScanner } from "@/hooks/useScanner";
+import colors from "@/theme/colors";
+import Text from "@/components/Text";
 
-const Index = () => {
-  const {
-    hasPermission,
-    scanned,
-    scannedData,
-    isModalVisible,
-    handleBarCodeScanned,
-    handleReset,
-  } = useScanner();
-  const isFocused = useIsFocused();
+// TODO: useIsFocused. Only render camera if focused.
 
-  if (hasPermission === false) {
-    return (
-      <View style={styles.noPermissionContainer}>
-        <Text style={styles.noPermissionText}>Loading...</Text>
-      </View>
-    );
+const Page = () => {
+  const { state, functions } = useBarcodeScanner();
+
+  if (!state.cameraPermission) {
+    debug("No permissions yet.");
+  }
+
+  if (!state.cameraPermission?.granted) {
+    debug("No permissions granted yet.");
   }
 
   return (
-    <>
-      <View style={styles.container}>
-        <ItemModal
-          isVisible={isModalVisible}
-          onClose={handleReset}
-          data={scannedData}
-        />
-        {isFocused && (
-          <BarCodeScanner
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-            style={StyleSheet.absoluteFillObject}
-          >
-            <ScannerOverlay>
-              <Text style={styles.ctaText}>🔍 Scan a QR or Barcode 🔎</Text>
-            </ScannerOverlay>
-          </BarCodeScanner>
-        )}
-      </View>
-    </>
+    <Screen isScrollable={false}>
+      <CameraView
+        style={styles.cameraContainer}
+        onBarcodeScanned={
+          state.isScanning ? functions.handleBarcodeScanned : undefined
+        }
+      >
+        <Modal
+          animationType="fade"
+          transparent
+          visible={state.isModalVisible}
+          onRequestClose={functions.handleReset}
+        >
+          <TouchableOpacity
+            onPress={functions.handleReset}
+            style={styles.modalBackdrop}
+          />
+          <View style={styles.modalContainer}>
+            <Text>You scanned:</Text>
+            <Text>{state.data}</Text>
+            <Button title="Copy to Clipboard" />
+            <Button title="Open URL" />
+          </View>
+        </Modal>
+      </CameraView>
+    </Screen>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  cameraContainer: {
     flex: 1,
-    backgroundColor: "rgba(6,18,58,1)",
   },
-  noPermissionContainer: {
+  modalBackdrop: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: colors.navy["0.1"],
+    minHeight: "60%",
   },
-  noPermissionText: {
-    color: "white",
-    fontFamily: fonts.bold,
-  },
-  ctaText: {
-    color: "rgba(6,18,58,1)",
-    textAlign: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-    fontFamily: fonts.bold,
-    backgroundColor: "white",
-    width: "101%",
+  modalContainer: {
+    backgroundColor: colors.white["1.0"],
+    padding: 32,
   },
 });
 
-export default Index;
+export default Page;

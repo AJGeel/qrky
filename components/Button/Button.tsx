@@ -1,44 +1,31 @@
+import colors from "@/theme/colors";
 import {
-  TouchableOpacity,
-  Text,
   StyleSheet,
-  StyleProp,
-  ViewStyle,
+  TouchableOpacity,
+  TouchableOpacityProps,
 } from "react-native";
-import { fonts } from "../../theme/fonts";
+import Text from "../Text";
 
-type Props = {
-  onPress: () => void;
+type ButtonProps = TouchableOpacityProps & {
   label: string;
-  containerStyle?: StyleProp<ViewStyle>;
-  labelStyle?: StyleProp<ViewStyle>;
+  onPress: () => void;
 };
 
-const Button = ({ onPress, label, containerStyle, labelStyle }: Props) => {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[styles.container, containerStyle]}
-      activeOpacity={0.5}
-    >
-      <Text style={[styles.label, labelStyle]}>{label}</Text>
-    </TouchableOpacity>
-  );
-};
-
-export default Button;
+const Button = ({ label, onPress, ...props }: ButtonProps) => (
+  <TouchableOpacity
+    {...props}
+    onPress={onPress}
+    activeOpacity={0.6}
+    style={styles.container}
+  >
+    <Text>{label}</Text>
+  </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 6,
-  },
-  label: {
-    fontSize: 14,
-    color: "rgba(6,18,58,1)",
-    textAlign: "center",
-    fontFamily: fonts.bold,
+    backgroundColor: colors.navy["1.0"],
   },
 });
+
+export default Button;
